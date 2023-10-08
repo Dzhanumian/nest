@@ -3,15 +3,20 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import {Comment} from '/entities/comment.entity';
+import {Comment} from './entities/comment.entity';
+import * as moment from 'moment';
 
 @Injectable()
 export class CommentsService {
   constructor(@InjectRepository(Comment) private repository: Repository<Comment>) {
   }
 
-  create(createCommentDto: CreateCommentDto) {
-    return this.repository.save(createCommentDto);
+  create(data: CreateCommentDto) {
+    return this.repository.save({
+      ...data,
+      create_at: moment().format('YYYY-MM-DD HH-mm-ss'),
+      update_at: moment().format('YYYY-MM-DD HH-mm-ss')
+    });
   }
 
   findAll() {
