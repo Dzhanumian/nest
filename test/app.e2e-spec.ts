@@ -5,6 +5,7 @@ import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNjk5Mjg3MzU1LCJleHAiOjE2OTkyOTA5NTV9.BrtmhMUt1mPnYcUIdHQTR4U5GAwx5QeEHRXWyiRNzt4'
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -15,10 +16,31 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/tasks (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+        .get('/tasks')
+        .set('Authorization', 'Bearer '+accessToken)
+        .expect(200);
+  });
+
+  it('/tasks (POST)', () => {
+    return request(app.getHttpServer())
+        .post('/tasks')
+        .send({ name: 'Новая задача' })
+        .set('Authorization', 'Bearer '+accessToken)
+        .expect(201)
+        .expect(res => {
+          expect(res.body).toEqual(
+              expect.objectContaining({
+                id: expect.any(Number),
+                name: expect.any(String),
+              }),
+          );
+        })
+  });
+
+  afterAll((done) => {
+    app.close();
+    done();
   });
 });
