@@ -1,8 +1,9 @@
-import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
+import {Body, Controller, Post} from '@nestjs/common';
 import { AppService } from './app.service';
-import {AuthGuard} from "@nestjs/passport";
 import {AuthService} from "./auth/auth.service";
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller()
 export class AppController {
   constructor(
@@ -10,15 +11,12 @@ export class AppController {
       private authService: AuthService
   ) {}
 
+  @ApiResponse({
+    status: 200,
+    description: "авторизация успешна"
+  })
   @Post('auth/login')
   async login(@Body() req) {
     return this.authService.login(req);
   }
-
-  // @UseGuards(AuthGuard('local'))
-  // @Post('auth/login')
-  // async login(@Request() req) {
-  //   return req;
-  //   return this.authService.login(req.user);
-  // }
 }
