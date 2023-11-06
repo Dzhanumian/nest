@@ -2,10 +2,10 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nes
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import {AuthGuard} from "@nestjs/passport";
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @Controller('comments')
+@UseGuards(JwtAuthGuard)
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
@@ -14,7 +14,6 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.commentsService.findAll();
