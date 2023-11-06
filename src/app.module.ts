@@ -10,6 +10,8 @@ import { Task } from './tasks/entities/task.entity';
 import { UsersModule } from './users/users.module';
 import * as process from "process";
 import {Comment} from "./comments/entities/comment.entity";
+import { AuthModule } from './auth/auth.module';
+import {User} from "./users/entities/user.entity";
 
 @Module({
   imports: [
@@ -21,12 +23,13 @@ import {Comment} from "./comments/entities/comment.entity";
           username: process.env.DB_USER,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_NAME,
-          entities: [Task, Comment],
+          entities: [Task, Comment, User],
           synchronize: true,
       }),
       TasksModule,
       CommentsModule,
       UsersModule,
+      AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
